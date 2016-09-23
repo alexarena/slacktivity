@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/alexarena/slacktivity/issues"
   },
-  "homepage": "https://github.com/alexarena/slacktivity#readme"
+  "homepage": "https://github.com/alexarena/slacktivity#readme",
+  "dependencies": {
+    "cron": "^1.1.0",
+    "dotenv": "^2.0.0",
+    "node-cron": "^1.1.2",
+    "node-libcurl": "^1.0.0"
+  }
 }
