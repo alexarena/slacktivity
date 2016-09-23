@@ -1,15 +1,19 @@
 var http = require('http');
 var CronJob = require('cron').CronJob;
+var Slack = require('slack-node');
 require('dotenv').config();
 var interval = 5; // seconds
 
 var sitesToCheck = [];
-
 var site1 = {"url": "http://localhost:3000","then": null,"now":null};
 sitesToCheck.push(site1);
 
+slack = new Slack();
+slack.setWebhook(process.env.SLACK_WEBHOOK_URL);
+
+console.log('Welcome to Slacktivity Monitor. I\'m now checking for updates every '+interval+' seconds.');
+
 new CronJob('*/'+interval+' * * * * *', function() {
-  console.log('CHECKING EVERY '+interval+' SECONDS.');
 
   for(var i=0; i<sitesToCheck.length; i++){
     site = sitesToCheck[i];
@@ -19,15 +23,11 @@ new CronJob('*/'+interval+' * * * * *', function() {
         sitesToCheck[i] = updateSite(site,data);
 
       }
-      else {console.log("error");}
+      else {}
     });
   }
 
 }, null, true, 'America/Los_Angeles');
-
-console.log('yo');
-
-
 
 // Utility function that downloads a URL and invokes callback with the data.
 function download(url, callback) {
@@ -72,7 +72,13 @@ function updateSite(site,data){
 
 function sendNotification(){
   console.log("Change detected to: " + site.url);
+
+  slack.webhook({
+    channel: "#testing",
+    username: "slacktivity-monitor",
+    text: "Heads up! Something has changed at: " + site.url+ "."
+  }, function(err, response) {
+    //console.log(response);
+  });
+
 }
-
-
-console.log("Hello world!");
