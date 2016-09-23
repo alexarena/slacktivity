@@ -1,0 +1,19 @@
+{
+  "name": "slacktivity",
+  "version": "0.0.1",
+  "description": "Monitor changes to sites through Slack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexarena/slacktivity.git"
+  },
+  "author": "Alex Arena",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexarena/slacktivity/issues"
+  },
+  "homepage": "https://github.com/alexarena/slacktivity#readme"
+}
