@@ -3,9 +3,27 @@ var CronJob = require('cron').CronJob;
 var Slack = require('slack-node');
 require('dotenv').config();
 var interval = 5; // seconds
+var fs = require('fs');
+
+//require('colors')
+var jsdiff = require('diff');
+
+
+
+
+// diff.forEach(function(part){
+//   // green for additions, red for deletions
+//   // grey for common parts
+//   var color = part.added ? 'green' :
+//     part.removed ? 'red' : 'grey';
+//   process.stderr.write(part.value[color]);
+// });
+
+console.log()
+
 
 var sitesToCheck = [];
-var site1 = {"url": "http://localhost:3000","then": null,"now":null};
+var site1 = {"url": "http://localhost:3000","then": null,"now":null,"look_for":"Alex"};
 sitesToCheck.push(site1);
 
 slack = new Slack();
@@ -49,6 +67,8 @@ function updateSite(site,data){
   //First Run
   if(site.then == null){
 
+    console.log(data);
+
     site.then = data;
     site.now = data;
 
@@ -61,8 +81,23 @@ function updateSite(site,data){
     site.then = site.now;
     site.now = data;
 
+    //Check if the site recieved any updates at all.
     if(site.then != site.now){
-      sendNotification();
+
+      //If we're not looking for anything specific, let the user know the site has been updated.
+      if(site.look_for == null){
+        sendNotification();
+      }
+
+      else{
+
+        //Only send the notification if the updated site includes our look_for term.
+        if(site.now.includes(site.look_for)){
+          sendNotification();
+        }
+
+      }
+
     }
 
     return site;
@@ -73,12 +108,41 @@ function updateSite(site,data){
 function sendNotification(){
   console.log("Change detected to: " + site.url);
 
+  var changes = jsdiff.diffWords(site.then,site.now);
+  console.log(changes);
+
+  var removals = '';
+  var additions = '';
+
+  console.log("Here's what's new: ")
+  for(var i=0; i<changes.length; i++){
+    if(changes[i].removed == true){
+      removals = changes[i].value;
+    }
+    if(changes[i].added == true){
+      additions = changes[i].value;
+    }
+  }
+
+  if(removals != ''){
+  console.log("Removed: ");
+  console.log(removals);
+  }
+
+  if(additions != ''){
+  console.log("Added: ");
+  console.log(additions);
+  }
+
+
+
   slack.webhook({
     channel: "#testing",
     username: "slacktivity-monitor",
     text: "Heads up! Something has changed at: " + site.url+ "."
+
   }, function(err, response) {
-    //console.log(response);
+    console.log(response);
   });
 
 }
