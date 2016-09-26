@@ -3,6 +3,8 @@ var app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('views'));
 
+var slacktivity = require('./index.js')
+
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.json() );
@@ -70,10 +72,12 @@ app.post('/setupdateinterval',function(req,res){
     if (err){
       res.json(err);
     }
+    else{
+      slacktivity.refreshCronJob();
+      res.redirect('/?success=true');
+    }
 
   });
-
-  res.redirect('/?success=true');
 
 
 });
