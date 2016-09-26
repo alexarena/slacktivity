@@ -10,4 +10,5 @@
 .title-link:hover{
   color: #242526;
   text-decoration: none;
+  cursor: pointer;
 }

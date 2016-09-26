@@ -86,6 +86,26 @@ app.post('/setupdateinterval',function(req,res){
 
 });
 
+app.post('/delete/:id',function(req,res){
+
+  console.log("POST delete " );
+  console.log(req.body);
+
+  var query = 'DELETE FROM "monitored_sites" WHERE "id"='+req.params.id+'';
+
+
+  client.query(query, function (err, result) {
+    if (err){
+      res.json('/?success=false');
+    }
+
+  });
+
+  res.json('/?success=true');
+
+
+});
+
 app.post('/addnewsite',function(req,res){
 
   console.log("POST add new site " );

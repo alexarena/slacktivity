@@ -28,12 +28,13 @@ function load() {
 
         for(var i=0; i<data.length; i++){
           var panel = '';
+          var sidePanelParam = "'" + data[i].id + "'"
 
           panel += '<div class="panel panel-default">';
           panel += '<div class="panel-heading">'
-          panel += '<h3 class="panel-title">'+data[i].url+'</h3>'
+          panel += '<a onclick="toggleSitePanel('+sidePanelParam+')"><h3 class="panel-title title-link">'+data[i].url+'<span class="glyphicon glyphicon-menu-down pull-right " id="pull-down-for-'+data[i].id+'" aria-hidden="true"></span><span class="glyphicon glyphicon-menu-up pull-right hidden" id="pull-up-for-'+data[i].id+'" aria-hidden="true"></span></h3></a>'
           panel += '</div>'
-          panel += '<div class="panel-body">'
+          panel += '<div class="panel-body hidden" id="panel-for-'+data[i].id+'">'
           panel += '<div class="col-lg-12">'
           panel += '<form>'
           panel += '<div class="form-group">'
@@ -63,11 +64,10 @@ function load() {
           panel += '<small id="custom-slack-channel-help" class="form-text text-muted">If you don\'t specify one here, notifications will be sent to your webhook\'s default channel.</small>'
           panel += '</div>'
           panel += '<div class="col-xs-6 col-no-pad">'
-          panel += '<button type="submit" class="btn btn-default">Cancel</button>'
           panel += '<button type="submit" class="btn btn-default">Update</button>'
           panel += '</div>'
           panel += '<div class="col-xs-6 col-no-pad">'
-          panel += '<button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></button>'
+          panel += '<button onclick="deleteButton('+sidePanelParam+')" class="btn btn-default pull-right"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></button>'
           panel += '</div>'
           panel += '</form>'
           panel += '</div>'
@@ -84,6 +84,18 @@ function load() {
 
 }
 
+function deleteButton(id){
+  $.post( "delete/"+id, function( data ) {
+    console.log(data);
+    if(data.toString().includes('success')){
+      window.location.replace("/?success=true");
+    }
+    else{
+      window.location.replace("/?success=false");
+    }
+});
+}
+
 function showOrHideAddSitePanel(){
 
   $("#add-site").toggleClass( "hidden" );
@@ -91,4 +103,14 @@ function showOrHideAddSitePanel(){
   $("#add-button").toggleClass( "hidden" );
 
 
+}
+
+function toggleSitePanel(id){
+  console.log(id);
+  id = '#panel-for-' + id;
+  var pullUp = '#pull-up-for-' + id;
+  var pullDown = '#pull-down-for-' + id;
+  $(id).toggleClass("hidden");
+  $(pullUp).toggleClass("hidden");
+  $(pullDown).toggleClass("hidden");
 }
