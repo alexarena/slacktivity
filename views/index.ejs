@@ -15,19 +15,27 @@
     <![endif]-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
 </head>
 
-<body>
+<body onload="load();">
     <div class="container">
         <div class="row">
             <div class="col-lg-9">
                 <div class="page-header">
-                    <h1><img src="logo.png" width="56px"></img> Slacktivity Monitor <small class="hidden-xs">Simple, self-hosted, web monitoring.</small></h1>
+                    <h1><a class="title-link" href="/"><img src="logo.png" width="56px"></img>Slacktivity Monitor</a> <small class="hidden-xs">Simple, self-hosted web monitoring.</small></h1>
                 </div>
 
-                <div class="alert alert-success alert-dismissible" role="alert">
+                  <div id="wait-for-load" class="hidden">
+
+                <div class="alert alert-success alert-dismissible hidden" role="alert" id="success-msg">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong>Success!</strong> Your updates have been saved.
+                </div>
+
+                <div class="alert alert-danger alert-dismissible hidden" role="alert" id="failure-msg">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> There was a problem saving your changes.
                 </div>
 
                 <div class="panel panel-default">
@@ -36,10 +44,10 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-lg-6">
-                            <form>
+                            <form action="/setupdateinterval" method="post">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Update Interval (Seconds)</label>
-                                    <input type="number" class="form-control" id="webhook-url" placeholder="60">
+                                    <input type="number" class="form-control" id="update_interval" name="update_interval" placeholder="60" required>
                                     <small id="webhook-url-help" class="form-text text-muted">This will determine how often Slacktivity Monitor checks for changes.</small>
                                 </div>
                                 <button type="submit" class="btn btn-default">Update</button>
@@ -54,16 +62,16 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-lg-8">
-                            <form>
+                            <form action="/setslackdetails" method="post">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Webhook URL</label>
-                                    <input type="url" class="form-control" id="webhook-url" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX">
+                                    <input type="url" class="form-control" id="webhook-url" name="webhook_url" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX" required>
                                     <small id="webhook-url-help" class="form-text text-muted">Don't have a webhook URL? <a href="https://my.slack.com/services/new/incoming-webhook/"> Create one here</a>.</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Slackbot Name</label>
-                                    <input type="text" class="form-control" id="webhook-url" placeholder="slacktivity-monitor">
+                                    <input type="text" class="form-control" id="slackbot-name" name="slackbot_name" placeholder="slacktivity-monitor">
                                 </div>
                                 <button type="submit" class="btn btn-default">Update</button>
                             </form>
@@ -73,42 +81,40 @@
                 </div>
 
                 <div class="page-header">
-                    <h3>Monitored Sites <button type="submit" class="btn btn-default btn-sm btn-default pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></h3>
+                    <h3>Monitored Sites
+                      <button id="add-button" onclick="showOrHideAddSitePanel()" class="btn btn-default btn-sm btn-default pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                      <button id="remove-button" onclick="showOrHideAddSitePanel()" class="btn btn-default btn-sm btn-default pull-right hidden"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    </h3>
                 </div>
 
-                <div class="panel panel-default">
+                <div class="panel panel-success hidden" id="add-site">
                     <div class="panel-heading">
-                        <h3 class="panel-title">alexarena.com</h3>
+                        <h3 class="panel-title">Add Site</h3>
                     </div>
 
                     <div class="panel-body">
                         <div class="col-lg-12">
-                            <form>
+                            <form action="/addnewsite" method="post">
                                 <div class="form-group">
                                     <label for="website-url">Website URL</label>
-                                    <input type="url" class="form-control" id="webhook-url" value="http://alexarena.com">
+                                    <input name="website_url" type="url" class="form-control" id="website-url" required>
                                     <small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="search-term">Search Term</label>
-                                    <input type="text" class="form-control" id="webhook-url" placeholder="">
+                                    <input name="search_term" type="text" class="form-control" id="search_term" placeholder="">
                                     <small id="webhook-url-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="custom-slack-channel">Slack Channel</label>
-                                    <input type="text" class="form-control" id="custom-slack-channel" placeholder="#">
+                                    <input name="custom_slack_channel" type="text" class="form-control" id="custom-slack-channel" placeholder="#">
                                     <small id="custom-slack-channel-help" class="form-text text-muted">If you don't specify one here, notifications will be sent to your webhook's default channel.</small>
                                 </div>
 
                                 <div class="col-xs-6 col-no-pad">
-                                    <button type="submit" class="btn btn-default">Cancel</button>
-                                    <button type="submit" class="btn btn-default">Update</button>
-                                </div>
-
-                                <div class="col-xs-6 col-no-pad">
-                                    <button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></button>
+                                    <button type="submit" class="btn btn-default">Add Site</button>
                                 </div>
 
                             </form>
@@ -117,8 +123,14 @@
 
                 </div>
 
+                <div id="site-list">
+                  <!-- Filled by JQuery in index.js -->
+                </div>
+
             </div>
         </div>
+
+      </div>
     </div>
 </body>
 

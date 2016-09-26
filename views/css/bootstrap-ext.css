@@ -2,3 +2,12 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+
+.title-link{
+  color: #242526;
+}
+
+.title-link:hover{
+  color: #242526;
+  text-decoration: none;
+}
