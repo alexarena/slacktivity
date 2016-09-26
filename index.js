@@ -86,6 +86,30 @@ app.post('/setupdateinterval',function(req,res){
 
 });
 
+app.post('/updatexistingsite',function(req,res){
+
+  console.log("POST update existing site " );
+  console.log(req.body);
+
+  if(!req.body.website_url){
+    res.redirect('/?success=false');
+  }
+  else{
+
+    var query = "UPDATE \"monitored_sites\" SET url = '"+req.body.website_url+"', search_term= '"+req.body.search_term+"', slack_channel='"+req.body.slack_channel+"' WHERE id="+req.body.id
+    client.query(query, function (err, result) {
+      if (err){
+        res.redirect('/?success=false');
+      }
+      else{
+        res.redirect('/?success=true');
+      }
+    });
+
+  }
+
+});
+
 app.post('/delete/:id',function(req,res){
 
   console.log("POST delete " );
