@@ -2,17 +2,15 @@ var express = require('express');
 var app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('views'));
-
 var slacktivity = require('./index.js')
-
 var bodyParser = require('body-parser');
-
 app.use(bodyParser.json() );
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
 var pg = require('pg');
+
+var port = 3000;
 
 var dbconfig = {
   user: 'postgres', //env var: PGUSER
@@ -31,6 +29,20 @@ var client = new pg.Client(dbconfig);
 client.connect(function (err) {
   if (err){ throw err};
 });
+
+exports.query = function(query,callback){
+
+  client.query(query, function (err, result) {
+    if (err){
+      callback(err);
+    }
+    else{
+      callback(result);
+    }
+
+  });
+
+}
 
 app.get('/', function (req, res) {
   res.render('index');
@@ -64,8 +76,8 @@ app.get('/loadmonitoredsites',function(req,res){
 
 app.post('/setupdateinterval',function(req,res){
 
-  console.log("POST update interval " );
-  console.log(req.body);
+  //console.log("POST update interval " );
+  //console.log(req.body);
 
 
   client.query('UPDATE "config" SET update_interval =  ' + req.body.update_interval, function (err, result) {
@@ -84,8 +96,8 @@ app.post('/setupdateinterval',function(req,res){
 
 app.post('/setupdateinterval',function(req,res){
 
-  console.log("POST update interval " );
-  console.log(req.body);
+  //console.log("POST update interval " );
+  //console.log(req.body);
 
 
   client.query('UPDATE "config" SET update_interval =  ' + req.body.update_interval, function (err, result) {
@@ -102,8 +114,8 @@ app.post('/setupdateinterval',function(req,res){
 
 app.post('/updatexistingsite',function(req,res){
 
-  console.log("POST update existing site " );
-  console.log(req.body);
+  //console.log("POST update existing site " );
+  //console.log(req.body);
 
   if(!req.body.website_url){
     res.redirect('/?success=false');
@@ -126,8 +138,8 @@ app.post('/updatexistingsite',function(req,res){
 
 app.post('/delete/:id',function(req,res){
 
-  console.log("POST delete " );
-  console.log(req.body);
+  //console.log("POST delete " );
+  //console.log(req.body);
 
   var query = 'DELETE FROM "monitored_sites" WHERE "id"='+req.params.id+'';
 
@@ -146,8 +158,8 @@ app.post('/delete/:id',function(req,res){
 
 app.post('/addnewsite',function(req,res){
 
-  console.log("POST add new site " );
-  console.log(req.body);
+  //console.log("POST add new site " );
+  //console.log(req.body);
 
   var search_term;
   var slack_channel;
@@ -168,7 +180,7 @@ app.post('/addnewsite',function(req,res){
   }
 
   var query = 'INSERT INTO "monitored_sites"("url","search_term","slack_channel") VALUES('+url+','+search_term+','+slack_channel+')'
-  console.log(query);
+  //console.log(query);
 
 
   client.query(query, function (err, result) {
@@ -185,11 +197,11 @@ app.post('/addnewsite',function(req,res){
 
 app.post('/setslackdetails',function(req,res){
 
-  console.log("POST set slack details " );
-  console.log(req.body);
+  //console.log("POST set slack details " );
+  //console.log(req.body);
 
 var query = "UPDATE config SET webhook_url =  '" + req.body.webhook_url + "', slackbot_name =  '" + req.body.slackbot_name + "'";
-console.log(query);
+//console.log(query);
 
  client.query(query, function (err, result) {
     if (err){
@@ -205,8 +217,8 @@ console.log(query);
 
 exports.start = function(){
 
-  app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+  app.listen(port, function () {
+    console.log('Welcome to Slacktivity Monitor! I\'m now running on port: ' + port);
   });
 
 }
