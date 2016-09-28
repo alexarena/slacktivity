@@ -16,6 +16,10 @@ server.start();
 
 slack = new Slack();
 
+var debug = require('./debug.js');
+debug.on();
+
+
 var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
 
     server.query('SELECT * FROM "config"', function(result) {
@@ -29,7 +33,7 @@ var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
 
     });
 
-    //console.log('update interval, webhook url, slackbot name' + updateInterval + webhookURL + slackbotName);
+    debug.log('update interval, webhook url, slackbot name' + updateInterval + webhookURL + slackbotName);
 
     server.query('SELECT * FROM "monitored_sites"', function(result) {
 
@@ -48,11 +52,11 @@ var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
                     if ((sites[i - 1].now != data) && (sites[i - 1].search_term == null)) {
                         var changes = jsdiff.diffWords(sites[i - 1].now, data);
                         sendChangeNotification(changes, sites[i - 1]);
-                    } else if ((sites[i - 1].now != data) && (data.includes(sites[i - 1].search_term))) {
+                  /*  } else if ((sites[i - 1].now != data) && (data.includes(sites[i - 1].search_term))) {
                         var changes = jsdiff.diffWords(sites[i - 1].now, data);
-                        sendChangeNotification(changes, sites[i - 1]);
+                        sendChangeNotification(changes, sites[i - 1]); THIS IS BAD. PLS FIX*/ 
                     } else {
-                        //console.log('no change detected.');
+                        debug.log('no change detected.');
                     }
 
                 }
@@ -84,7 +88,7 @@ function sendChangeNotification(changes, site) {
             icon_emoji: slackbotIcon,
             text: message
         }, function(err, response) {
-            //console.log(response);
+            debug.log(response);
         });
 
     } else {
@@ -94,7 +98,7 @@ function sendChangeNotification(changes, site) {
             icon_emoji: slackbotIcon,
             text: message
         }, function(err, response) {
-            //console.log(response);
+            debug.log(response);
         });
     }
 

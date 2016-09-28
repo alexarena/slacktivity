@@ -32,7 +32,7 @@ function load() {
 
           panel += '<div class="panel panel-default">';
           panel += '<div class="panel-heading">'
-          panel += '<a onclick="toggleSitePanel('+sidePanelParam+')"><h3 class="panel-title title-link">'+data[i].url+'<span class="glyphicon glyphicon-menu-down pull-right " id="pull-down-for-'+data[i].id+'" aria-hidden="true"></span><span class="glyphicon glyphicon-menu-up pull-right hidden" id="pull-up-for-'+data[i].id+'" aria-hidden="true"></span></h3></a>'
+          panel += '<a onclick="toggleSitePanel('+sidePanelParam+')"><h3 class="panel-title title-link">'+data[i].url+'<span class="glyphicon glyphicon-menu-down pull-right " id="pull-down-for-'+data[i].id+'" aria-hidden="true"></span><span class="glyphicon glyphicon-menu-up pull-right" id="pull-up-for-'+data[i].id+'" aria-hidden="true"></span></h3></a>'
           panel += '</div>'
           panel += '<div class="panel-body hidden" id="panel-for-'+data[i].id+'">'
           panel += '<div class="col-lg-12">'

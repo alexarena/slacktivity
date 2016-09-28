@@ -10,6 +10,9 @@ app.use(bodyParser.urlencoded({
 }));
 var pg = require('pg');
 
+var debug = require('./debug.js');
+debug.on();
+
 var port = 3000;
 
 var dbconfig = {
@@ -76,8 +79,8 @@ app.get('/loadmonitoredsites',function(req,res){
 
 app.post('/setupdateinterval',function(req,res){
 
-  //console.log("POST update interval " );
-  //console.log(req.body);
+  debug.log("POST update interval " );
+  debug.log(req.body);
 
 
   client.query('UPDATE "config" SET update_interval =  ' + req.body.update_interval, function (err, result) {
@@ -96,8 +99,8 @@ app.post('/setupdateinterval',function(req,res){
 
 app.post('/setupdateinterval',function(req,res){
 
-  //console.log("POST update interval " );
-  //console.log(req.body);
+  debug.log("POST update interval " );
+  debug.log(req.body);
 
 
   client.query('UPDATE "config" SET update_interval =  ' + req.body.update_interval, function (err, result) {
@@ -114,8 +117,8 @@ app.post('/setupdateinterval',function(req,res){
 
 app.post('/updatexistingsite',function(req,res){
 
-  //console.log("POST update existing site " );
-  //console.log(req.body);
+  debug.log("POST update existing site " );
+  debug.log(req.body);
 
   if(!req.body.website_url){
     res.redirect('/?success=false');
@@ -138,8 +141,8 @@ app.post('/updatexistingsite',function(req,res){
 
 app.post('/delete/:id',function(req,res){
 
-  //console.log("POST delete " );
-  //console.log(req.body);
+  debug.log("POST delete " );
+  debug.log(req.body);
 
   var query = 'DELETE FROM "monitored_sites" WHERE "id"='+req.params.id+'';
 
@@ -158,8 +161,8 @@ app.post('/delete/:id',function(req,res){
 
 app.post('/addnewsite',function(req,res){
 
-  //console.log("POST add new site " );
-  //console.log(req.body);
+  debug.log("POST add new site " );
+  debug.log(req.body);
 
   var search_term;
   var slack_channel;
@@ -180,7 +183,7 @@ app.post('/addnewsite',function(req,res){
   }
 
   var query = 'INSERT INTO "monitored_sites"("url","search_term","slack_channel") VALUES('+url+','+search_term+','+slack_channel+')'
-  //console.log(query);
+  debug.log(query);
 
 
   client.query(query, function (err, result) {
@@ -197,11 +200,11 @@ app.post('/addnewsite',function(req,res){
 
 app.post('/setslackdetails',function(req,res){
 
-  //console.log("POST set slack details " );
-  //console.log(req.body);
+  debug.log("POST set slack details " );
+  debug.log(req.body);
 
 var query = "UPDATE config SET webhook_url =  '" + req.body.webhook_url + "', slackbot_name =  '" + req.body.slackbot_name + "'";
-//console.log(query);
+debug.log(query);
 
  client.query(query, function (err, result) {
     if (err){
