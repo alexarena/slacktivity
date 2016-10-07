@@ -8,7 +8,6 @@ var updateInterval; // seconds
 var webhookURL = '';
 var slackbotName = 'slacktivity-bot';
 var slackbotIcon = ':radio:';
-var sites = [];
 
 var server = require('./routes.js');
 server.start();
@@ -37,14 +36,37 @@ server.query('SELECT * FROM "config"', function(result) {
 function checkForChanges(){
   debug.log('listening for changes and checking every: ' + updateInterval + ' seconds');
 
-  debug.log('Slack Webhook URL is: ' + webhookURL);
-  slack.webhook({
-      username: slackbotName,
-      icon_emoji: slackbotIcon,
-      text: "Test message!!"
-  }, function(err, response) {
-      debug.log(response);
+  server.query('SELECT * FROM "monitored_sites"', function(result) {
+
+    var sites = result.rows;
+
+    for(var i=0; i<sites.length; i++){ //check each site for changes
+      checkSingleSiteForChanges(sites[i]);
+    }
+
   });
+
+}
+
+function checkSingleSiteForChanges(site) {
+
+    debug.log('Checking site for changes!');
+    download(site.url, function(downloadContents) {
+      if((downloadContents != site.then) && (site.then != null)){
+        debug.log('Change Detected!');
+        var changes = jsdiff.diffWords(site.then, downloadContents);
+        sendChangeNotification(changes,site);
+      }
+      else{
+        debug.log('No change detected.')
+      }
+
+      //Set the last checked value in the DB to what we just got.
+      var query = 'UPDATE "monitored_sites" SET "then" = \''+downloadContents+'\' WHERE id=' + site.id;
+      debug.log(query);
+      server.query(query,function(result){});
+    });
+
 
 }
 
@@ -55,26 +77,14 @@ function sendChangeNotification(changes, site) {
         message = "Heads up! Your search term (" + site.search_term + ") was found at: " + site.url;
     }
 
-    if (site.slack_channel == null) {
-
-        slack.webhook({
-            username: slackbotName,
-            icon_emoji: slackbotIcon,
-            text: message
-        }, function(err, response) {
-            debug.log(response);
-        });
-
-    } else {
-        slack.webhook({
-            channel: ("#" + site.slack_channel),
-            username: slackbotName,
-            icon_emoji: slackbotIcon,
-            text: message
-        }, function(err, response) {
-            debug.log(response);
-        });
-    }
+    slack.webhook({
+        channel: site.slack_channel, //This must be prefixed with '#'
+        username: slackbotName,
+        icon_emoji: slackbotIcon,
+        text: message
+    }, function(err, response) {
+        debug.log(response);
+    });
 
 }
 
@@ -93,11 +103,12 @@ function download(url, callback) {
     });
 }
 
-exports.setSlackDetails = function(newURL,newBotName){
 
+//setUpdateInterval and setSlackDetails are used by routes to update while the app is running.
+
+exports.setSlackDetails = function(newURL,newBotName){
   webhookURL = newURL;
   slack.setWebhook(webhookURL);
-
   slackbotName = newBotName;
 
 }
