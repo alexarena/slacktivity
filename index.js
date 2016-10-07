@@ -54,7 +54,7 @@ var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
                         sendChangeNotification(changes, sites[i - 1]);
                   /*  } else if ((sites[i - 1].now != data) && (data.includes(sites[i - 1].search_term))) {
                         var changes = jsdiff.diffWords(sites[i - 1].now, data);
-                        sendChangeNotification(changes, sites[i - 1]); THIS IS BAD. PLS FIX*/ 
+                        sendChangeNotification(changes, sites[i - 1]); THIS IS BAD. PLS FIX*/
                     } else {
                         debug.log('no change detected.');
                     }
@@ -72,7 +72,8 @@ var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
 
 });
 
-task.start();
+//task.start();
+
 
 function sendChangeNotification(changes, site) {
 

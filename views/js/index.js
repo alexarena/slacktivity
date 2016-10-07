@@ -1,12 +1,19 @@
 function load() {
+
+  //console.log(monitored_sites);
+
+    $("#add-site-card").hide();
+    $("#failure-msg").hide();
+    $("#success-msg").hide();
+
     $.get("/load", function(data) {
 
         if((location.pathname+location.search).substr(2).includes('success=true')){
-          $("#success-msg").removeClass('hidden');
+          $("#success-msg").show();
         }
 
         if((location.pathname+location.search).substr(2).includes('success=false')){
-          $("#failure-msg").removeClass('hidden');
+          $("#failure-msg").show();
         }
 
         console.log(data);
@@ -85,6 +92,13 @@ function load() {
 
 }
 
+function applyActiveStyling(divID){
+
+  divID = "#" + divID;
+  $(divID).toggleClass('collapsableIsOpen');
+
+}
+
 function deleteButton(id){
   $.post( "delete/"+id, function( data ) {
     console.log(data);
@@ -104,6 +118,15 @@ function showOrHideAddSitePanel(){
   $("#add-button").toggleClass( "hidden" );
 
 
+}
+
+function addButton(){
+  if($("#addButton").text() == 'Add Site'){
+    $("#addButton").text("Cancel");
+  }
+  else{
+    $("#addButton").text("Add Site");
+  }
 }
 
 function toggleSitePanel(id){

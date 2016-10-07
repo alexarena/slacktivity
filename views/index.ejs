@@ -1,99 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <!-- Required meta tags always come first -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Slacktivity Monitor</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-ext.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/index.js"></script>
-</head>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+        <link href="css/bootstrap-ext.css" rel="stylesheet">
+        <!-- jQuery first, then Tether, then Bootstrap JS. -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
+        <script src="js/index.js"></script>
+    </head>
+    <body onload="load();">
 
-<body onload="load();">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9">
-                <div class="page-header">
-                    <h1><a class="title-link" href="/"><img src="logo.png" width="56px"></img>Slacktivity Monitor</a> <small class="hidden-xs">Simple, self-hosted web monitoring.</small></h1>
+        <%console.log("Monitored Sites: ") %>
+        <%console.log(monitored_sites)%>
+
+        <div class="container">
+
+            <div class="col-md-9">
+                <div class="title-container">
+                    <a class="title-link" href="/"><h4 class="display-4"></img><%=title %></h4></a>
+                <h5>
+                    <small class="text-muted">Simple, self-hosted web monitoring.</small>
+                </h5>
+            </div>
+
+            <div class="alert alert-success alert-dismissible" role="alert" id="success-msg">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Success!</strong>
+                Your updates have been saved.
+            </div>
+
+            <div class="alert alert-danger alert-dismissible" role="alert" id="failure-msg">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Error!</strong>
+                There was a problem saving your changes.
+            </div>
+
+            <div class="card">
+                <div class="card-block card-block-no-bottom-pad">
+                    <b>Update Interval</b>
+                    <hr class="no-bottom-margin"></hr>
                 </div>
-
-                  <div id="wait-for-load" class="hidden">
-
-                <div class="alert alert-success alert-dismissible hidden" role="alert" id="success-msg">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Success!</strong> Your updates have been saved.
-                </div>
-
-                <div class="alert alert-danger alert-dismissible hidden" role="alert" id="failure-msg">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Error!</strong> There was a problem saving your changes.
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Basic Configuration</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-lg-6">
-                            <form action="/setupdateinterval" method="post">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Update Interval (Seconds)</label>
-                                    <input type="number" class="form-control" id="update_interval" name="update_interval" placeholder="60" required>
-                                    <small id="webhook-url-help" class="form-text text-muted">This will determine how often Slacktivity Monitor checks for changes.</small>
-                                </div>
-                                <button type="submit" class="btn btn-default">Update</button>
-                            </form>
+                <div class="card-block">
+                    <form action="/setupdateinterval" method="post" class="form-inline">
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputAmount">Update Interval</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="update_interval" name="update_interval" placeholder="Update Interval">
+                                <div class="input-group-addon">Seconds</div>
+                            </div>
                         </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Set Update Interval</button>
+                    </form>
                 </div>
+            </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Slack Details</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-lg-8">
-                            <form action="/setslackdetails" method="post">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Webhook URL</label>
-                                    <input type="url" class="form-control" id="webhook-url" name="webhook_url" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX" required>
-                                    <small id="webhook-url-help" class="form-text text-muted">Don't have a webhook URL? <a href="https://my.slack.com/services/new/incoming-webhook/"> Create one here</a>.</small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Slackbot Name</label>
-                                    <input type="text" class="form-control" id="slackbot-name" name="slackbot_name" placeholder="slacktivity-monitor">
-                                </div>
-                                <button type="submit" class="btn btn-default">Update</button>
-                            </form>
+            <div class="card">
+                <div class="card-block card-block-no-bottom-pad">
+                    <b>Slack Details</b>
+                    <hr class="no-bottom-margin"></hr>
+                </div>
+                <div class="card-block">
+                    <form action="/setslackdetails" method="post">
+                        <div class="form-group">
+                            <label for="webhook-url">Webhook URL</label>
+                            <input type="text" class="form-control" id="webhook-url" name="webhook_url" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX">
                         </div>
+                        <div class="form-group">
+                            <label for="slackbot-name">Slackbot Name</label>
+                            <input type="text" class="form-control" id="slackbot-name" name="slackbot_name" placeholder="slacktivity-bot">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
 
-                    </div>
+            <div class="card">
+                <div class="card-block">
+                    <b>Monitored Sites</b>
+                    <a data-toggle="collapse" id="addButton" onclick="addButton();" href="#addBtnCollapse" aria-expanded="false" aria-controls="addBtnCollapse" class="card-link pull-xs-right">Add Site</a>
                 </div>
 
-                <div class="page-header">
-                    <h3>Monitored Sites
-                      <button id="add-button" onclick="showOrHideAddSitePanel()" class="btn btn-default btn-sm btn-default pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-                      <button id="remove-button" onclick="showOrHideAddSitePanel()" class="btn btn-default btn-sm btn-default pull-right hidden"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-                    </h3>
-                </div>
+                <div class="list-group" id="monitoredSitesList" role="tablist" aria-multiselectable="true">
 
-                <div class="panel panel-success hidden" id="add-site">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Add Site</h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="col-lg-12">
+                    <div class="collapse" id="addBtnCollapse">
+                        <div class="card card-block collapse-card-block list-group-item-within-card add-site-card">
                             <form action="/addnewsite" method="post">
                                 <div class="form-group">
                                     <label for="website-url">Website URL</label>
@@ -113,25 +114,50 @@
                                     <small id="custom-slack-channel-help" class="form-text text-muted">If you don't specify one here, notifications will be sent to your webhook's default channel.</small>
                                 </div>
 
-                                <div class="col-xs-6 col-no-pad">
-                                    <button type="submit" class="btn btn-default">Add Site</button>
-                                </div>
-
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
                             </form>
                         </div>
                     </div>
 
-                </div>
+                    <% for(var i=0; i<monitored_sites.length; i++){ %>
 
-                <div id="site-list">
-                  <!-- Filled by JQuery in index.js -->
+                        <% var divID = 'collapse-' + monitored_sites[i].id; %>
+
+                        <a
+                            href="#<%=divID%>"
+                            id="link-for-<%=divID%>"
+                            class="list-group-item list-group-item-action list-group-item-within-card"
+                            data-parent="#monitored-sites-accordion"
+                            data-toggle="collapse"
+                            onclick="applyActiveStyling('link-for-<%=divID%>');"
+                            aria-expanded="false"
+                            aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
+                        <div class="collapse" id="<%=divID%>" role="tabpanel">
+                            <div class="card card-block collapse-card-block list-group-item-within-card">
+                                <form action="/updatexistingsite" method="post">
+                                    <div class="form-group">
+                                        <label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="<%=monitored_sites[i].url%>" required>
+                                        <small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="search-term">Search Term</label><input type="text" class="form-control" name="search_term" id="search-term" placeholder="" value="<%=monitored_sites[i].search_term%>">
+                                        <small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="custom-slack-channel">Slack Channel URL</label><input type="text" class="form-control" name="slack_channel" id="custom-slack-channel" value="<%=monitored_sites[i].slack_channel%>">
+                                        <small id="custom-slack-channel-help" class="form-text text-muted">If you don't specify one here, notifications will be sent to your webhook's default channel.</small>
+                                    </div>
+                                    <input type="hidden" name="id" value="<%=monitored_sites[i].id%>">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button><button onclick="deleteButton('<%=monitored_sites[i].id%>')" class="btn btn-danger pull-xs-right">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+
+                    <%}%>
+
                 </div>
 
             </div>
         </div>
-
-      </div>
-    </div>
-</body>
-
+    </body>
 </html>
