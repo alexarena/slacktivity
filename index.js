@@ -13,6 +13,7 @@ server.start();
 
 slack = new Slack();
 
+//A little debugging module I've built. I might add onto later, but for now it
 var debug = require('./debug.js');
 debug.on();
 
@@ -74,6 +75,8 @@ function checkSingleSiteForChanges(site) {
 
 function sendChangeNotification(changes, site) {
 
+    debug.log(changes)
+
     var message = "Heads up! Something has changed at: " + site.url;
     if (site.search_term != null || site.search_term!= '') {
         message = "Heads up! Your search term (" + site.search_term + ") was found at: " + site.url;
@@ -83,7 +86,29 @@ function sendChangeNotification(changes, site) {
         channel: site.slack_channel, //This must be prefixed with '#'
         username: slackbotName,
         icon_emoji: slackbotIcon,
-        text: message
+        text: message,
+        attachments: [
+        {
+            "fallback": "ReferenceError - UI is not defined: https://honeybadger.io/path/to/event/",
+            "text": "Search Term: `internship`, was found at <http://localhost:3000>\nHere's a rundown of the changes:",
+            "fields": [
+                {
+                    "title": "Added",
+                    "value": "Awesome Project",
+                    "short": false
+                },
+                {
+                    "title": "Removed",
+                    "value": "production",
+                    "short": false
+                }
+            ],"mrkdwn_in": [
+                "text",
+                "pretext"
+            ],
+            "color": "#183D7F"
+        }
+    ]
     }, function(err, response) {
         debug.log(response);
     });
