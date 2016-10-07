@@ -113,14 +113,19 @@ app.post('/updatexistingsite',function(req,res){
   debug.log("POST update existing site " );
   debug.log(req.body);
 
+  console.log(req.body.website_url + " website URL was this")
+
   if(!req.body.website_url){
+    debug.log('No URL in request body')
     res.redirect('/?success=false');
   }
   else{
 
     var query = "UPDATE \"monitored_sites\" SET url = '"+req.body.website_url+"', search_term= '"+req.body.search_term+"', slack_channel='"+req.body.slack_channel+"' WHERE id="+req.body.id
+    debug.log('Query is: ' + query)
     client.query(query, function (err, result) {
       if (err){
+        debug.log('ERROR: ' + err)
         res.redirect('/?success=false');
       }
       else{

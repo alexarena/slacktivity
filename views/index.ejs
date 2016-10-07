@@ -17,102 +17,143 @@
     </head>
     <body onload="load();">
 
-      <%console.log("Monitored Sites: ") %>
-      <%console.log(monitored_sites)%>
+        <%console.log("Monitored Sites: ") %>
+        <%console.log(monitored_sites)%>
 
         <div class="container">
 
             <div class="col-md-9">
                 <div class="title-container">
                     <h4 class="display-4"></img><%=title %></h4>
-                    <h5>
-                        <small class="text-muted">Simple, self-hosted web monitoring.</small>
-                    </h5>
-                </div>
-                <div class="alert alert-success" role="alert">
-                    <strong>Well done!</strong>
-                    You successfully read this important alert message.
-                </div>
+                <h5>
+                    <small class="text-muted">Simple, self-hosted web monitoring.</small>
+                </h5>
+            </div>
 
-                <div class="card">
-                    <div class="card-block card-block-no-bottom-pad">
-                        <b>Update Interval</b>
-                        <hr class="no-bottom-margin"></hr>
-                    </div>
-                    <div class="card-block">
-                        <form action="/setupdateinterval" method="post" class="form-inline">
-                            <div class="form-group">
-                                <label class="sr-only" for="exampleInputAmount">Update Interval</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="update_interval" name="update_interval" placeholder="Update Interval">
-                                    <div class="input-group-addon">Seconds</div>
-                                </div>
+            <div class="alert alert-success alert-dismissible" role="alert" id="success-msg">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Success!</strong>
+                Your updates have been saved.
+            </div>
+
+            <div class="alert alert-danger alert-dismissible" role="alert" id="failure-msg">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Error!</strong>
+                There was a problem saving your changes.
+            </div>
+
+            <div class="card">
+                <div class="card-block card-block-no-bottom-pad">
+                    <b>Update Interval</b>
+                    <hr class="no-bottom-margin"></hr>
+                </div>
+                <div class="card-block">
+                    <form action="/setupdateinterval" method="post" class="form-inline">
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputAmount">Update Interval</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="update_interval" name="update_interval" placeholder="Update Interval">
+                                <div class="input-group-addon">Seconds</div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Set Update Interval</button>
-                        </form>
-                    </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Set Update Interval</button>
+                    </form>
                 </div>
+            </div>
 
-                <div class="card">
-                    <div class="card-block card-block-no-bottom-pad">
-                        <b>Slack Details</b>
-                        <hr class="no-bottom-margin"></hr>
-                    </div>
-                    <div class="card-block">
-                        <form action="/setslackdetails" method="post">
-                            <div class="form-group">
-                                <label for="webhook-url">Webhook URL</label>
-                                <input type="text" class="form-control" id="webhook-url" name="webhook_url" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX">
-                            </div>
-                            <div class="form-group">
-                                <label for="slackbot-name">Slackbot Name</label>
-                                <input type="text" class="form-control" id="slackbot-name" name="slackbot_name" placeholder="slacktivity-bot">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </form>
-                    </div>
+            <div class="card">
+                <div class="card-block card-block-no-bottom-pad">
+                    <b>Slack Details</b>
+                    <hr class="no-bottom-margin"></hr>
                 </div>
-
-                <div class="card">
-                  <div class="card-block">
-                      <b>Monitored Sites</b> <a data-toggle="collapse" id="addButton" onclick="addButton();" href="#addBtnCollapse" aria-expanded="false" aria-controls="addBtnCollapse" class="card-link pull-lg-right">Add Site</a>
-                  </div>
-
-                    <div class="list-group" id="monitoredSitesList" role="tablist" aria-multiselectable="true">
-
-                      <div class="collapse" id="addBtnCollapse">
-                      <div  class="card card-block collapse-card-block list-group-item-within-card add-site-card">
-                        <div class="form-group"><label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="http://localhost:8000/"><small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small></div>
-                        <div class="form-group"><label for="search-term">Search Term</label><input type="text" class="form-control" name="search_term" id="search-term" placeholder="" value="MAGA"><small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small></div>
+                <div class="card-block">
+                    <form action="/setslackdetails" method="post">
+                        <div class="form-group">
+                            <label for="webhook-url">Webhook URL</label>
+                            <input type="text" class="form-control" id="webhook-url" name="webhook_url" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label for="slackbot-name">Slackbot Name</label>
+                            <input type="text" class="form-control" id="slackbot-name" name="slackbot_name" placeholder="slacktivity-bot">
+                        </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
-                      </div>
-                    </div>
+                    </form>
+                </div>
+            </div>
 
+            <div class="card">
+                <div class="card-block">
+                    <b>Monitored Sites</b>
+                    <a data-toggle="collapse" id="addButton" onclick="addButton();" href="#addBtnCollapse" aria-expanded="false" aria-controls="addBtnCollapse" class="card-link pull-xs-right">Add Site</a>
+                </div>
 
+                <div class="list-group" id="monitoredSitesList" role="tablist" aria-multiselectable="true">
 
-                    <% for(var i=0; i<monitored_sites.length; i++){ %>
+                    <div class="collapse" id="addBtnCollapse">
+                        <div class="card card-block collapse-card-block list-group-item-within-card add-site-card">
+                            <form action="/addnewsite" method="post">
+                                <div class="form-group">
+                                    <label for="website-url">Website URL</label>
+                                    <input name="website_url" type="url" class="form-control" id="website-url" required>
+                                    <small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small>
+                                </div>
 
-                      <% var divID = 'collapse-' + monitored_sites[i].id; %>
+                                <div class="form-group">
+                                    <label for="search-term">Search Term</label>
+                                    <input name="search_term" type="text" class="form-control" id="search_term" placeholder="">
+                                    <small id="webhook-url-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
+                                </div>
 
-                    <a href="#<%=divID%>" id="link-for-<%=divID%>" class="list-group-item list-group-item-action list-group-item-within-card" data-parent="#monitored-sites-accordion" data-toggle="collapse"  onclick="applyActiveStyling('link-for-<%=divID%>');" aria-expanded="false" aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
-                    <div class="collapse" id="<%=divID%>" role="tabpanel">
-                        <div class="card card-block collapse-card-block list-group-item-within-card">
-                            <div class="form-group">
-                                <label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="<%=monitored_sites[i].url%>">
-                                <small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="search-term">Search Term</label><input type="text" class="form-control" name="search_term" id="search-term" placeholder="" value="<%=monitored_sites[i].search_term%>">
-                                <small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <div class="form-group">
+                                    <label for="custom-slack-channel">Slack Channel</label>
+                                    <input name="custom_slack_channel" type="text" class="form-control" id="custom-slack-channel" placeholder="#">
+                                    <small id="custom-slack-channel-help" class="form-text text-muted">If you don't specify one here, notifications will be sent to your webhook's default channel.</small>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
                         </div>
                     </div>
 
-                      <%}%>
+                    <% for(var i=0; i<monitored_sites.length; i++){ %>
 
+                        <% var divID = 'collapse-' + monitored_sites[i].id; %>
 
+                        <a
+                            href="#<%=divID%>"
+                            id="link-for-<%=divID%>"
+                            class="list-group-item list-group-item-action list-group-item-within-card"
+                            data-parent="#monitored-sites-accordion"
+                            data-toggle="collapse"
+                            onclick="applyActiveStyling('link-for-<%=divID%>');"
+                            aria-expanded="false"
+                            aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
+                        <div class="collapse" id="<%=divID%>" role="tabpanel">
+                            <div class="card card-block collapse-card-block list-group-item-within-card">
+                                <form action="/updatexistingsite" method="post">
+                                    <div class="form-group">
+                                        <label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="<%=monitored_sites[i].url%>" required>
+                                        <small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="search-term">Search Term</label><input type="text" class="form-control" name="search_term" id="search-term" placeholder="" value="<%=monitored_sites[i].search_term%>">
+                                        <small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="custom-slack-channel">Slack Channel URL</label><input type="text" class="form-control" name="slack_channel" id="custom-slack-channel" value="<%=monitored_sites[i].slack_channel%>">
+                                        <small id="custom-slack-channel-help" class="form-text text-muted">If you don't specify one here, notifications will be sent to your webhook's default channel.</small>
+                                    </div>
+                                    <input type="hidden" name="id" value="<%=monitored_sites[i].id%>">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button><button onclick="deleteButton('<%=monitored_sites[i].id%>')" class="btn btn-danger pull-xs-right">Remove</button>
+                                </form>
+                            </div>
+                        </div>
 
+                    <%}%>
 
                 </div>
 
