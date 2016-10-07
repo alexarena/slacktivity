@@ -26,6 +26,8 @@ var dbconfig = {
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
 };
 
+var test;
+
 // instantiate a new clients
 var client = new pg.Client(dbconfig);
 
@@ -50,6 +52,8 @@ exports.query = function(query,callback){
 
 app.get('/', function (req, res) {
 
+  test = setInterval(function(){ console.log("Hello"); }, 1000);
+
   client.query('SELECT * FROM monitored_sites', function (err, result) {
     if (err){
       //res.json(err);
@@ -58,6 +62,13 @@ app.get('/', function (req, res) {
     res.render('index',{"title": "Slacktivity Monitor","monitored_sites": result.rows});
 
   });
+});
+
+app.get('/interval3000', function (req, res) {
+
+  clearInterval(test);
+  test = setInterval(function(){ console.log("Hello interval is 300"); }, 3000);
+
 });
 
 app.get('/load',function(req,res){

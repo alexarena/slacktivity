@@ -72,7 +72,8 @@ var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
 
 });
 
-task.start();
+//task.start();
+
 
 function sendChangeNotification(changes, site) {
 
