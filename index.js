@@ -20,6 +20,7 @@ debug.on();
 
 var monitor; //handles setInterval
 
+//At start, gets and sets the configuration details.
 server.query('SELECT * FROM "config"', function(result) {
 
     updateInterval = result.rows[0].update_interval;
@@ -35,6 +36,16 @@ server.query('SELECT * FROM "config"', function(result) {
 
 function checkForChanges(){
   debug.log('listening for changes and checking every: ' + updateInterval + ' seconds');
+
+  debug.log('Slack Webhook URL is: ' + webhookURL);
+  slack.webhook({
+      username: slackbotName,
+      icon_emoji: slackbotIcon,
+      text: "Test message!!"
+  }, function(err, response) {
+      debug.log(response);
+  });
+
 }
 
 function sendChangeNotification(changes, site) {
@@ -80,6 +91,15 @@ function download(url, callback) {
     }).on("error", function() {
         callback(null);
     });
+}
+
+exports.setSlackDetails = function(newURL,newBotName){
+
+  webhookURL = newURL;
+  slack.setWebhook(webhookURL);
+
+  slackbotName = newBotName;
+
 }
 
 exports.setUpdateInterval = function(newInterval){

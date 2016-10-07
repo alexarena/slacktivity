@@ -200,6 +200,7 @@ debug.log(query);
       res.redirect('/?success=false');
     }
     else{
+      slacktivity.setSlackDetails(req.body.webhook_url,req.body.slackbot_name);
       res.redirect('/?success=true');
     }
 
