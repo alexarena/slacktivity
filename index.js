@@ -2,7 +2,6 @@ var http = require('http');
 var Slack = require('slack-node');
 var fs = require('fs');
 var jsdiff = require('diff');
-require('dotenv').config();
 
 var updateInterval; // seconds
 var webhookURL = '';
