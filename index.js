@@ -1,11 +1,10 @@
 var http = require('http');
-var CronJob = require('cron').CronJob;
 var Slack = require('slack-node');
 var fs = require('fs');
 var jsdiff = require('diff');
 require('dotenv').config();
 
-var updateInterval = 60; // seconds
+var updateInterval; // seconds
 var webhookURL = '';
 var slackbotName = 'slacktivity-bot';
 var slackbotIcon = ':radio:';
@@ -19,61 +18,24 @@ slack = new Slack();
 var debug = require('./debug.js');
 debug.on();
 
+var monitor; //handles setInterval
 
-var task = new CronJob('*/' + updateInterval + ' * * * * *', function() {
+server.query('SELECT * FROM "config"', function(result) {
 
-    server.query('SELECT * FROM "config"', function(result) {
+    updateInterval = result.rows[0].update_interval;
+    webhookURL = result.rows[0].webhook_url;
 
-        updateInterval = result.rows[0].update_interval;
-        webhookURL = result.rows[0].webhook_url;
+    slack.setWebhook(webhookURL);
 
-        slack.setWebhook(webhookURL);
+    slackbotName = result.rows[0].slackbot_name;
 
-        slackbotName = result.rows[0].slackbot_name;
-
-    });
-
-    debug.log('update interval, webhook url, slackbot name' + updateInterval + webhookURL + slackbotName);
-
-    server.query('SELECT * FROM "monitored_sites"', function(result) {
-
-        sites = result.rows;
-
-        for (var i = 0; i < sites.length; i++) {
-
-            download(sites[i].url, function(data) {
-
-                //First run
-                if (sites[i - 1].then == null) {
-                    server.query('UPDATE "monitored_sites" SET "then" = \'' + data + '\',"now" = \'' + data + '\' WHERE id=' + sites[i - 1].id, function(result) {});
-                } else {
-                    server.query('UPDATE "monitored_sites" SET "then" = \'' + sites[i - 1].now + '\',"now" = \'' + data + '\' WHERE id=' + sites[i - 1].id, function(result) {});
-
-                    if ((sites[i - 1].now != data) && (sites[i - 1].search_term == null)) {
-                        var changes = jsdiff.diffWords(sites[i - 1].now, data);
-                        sendChangeNotification(changes, sites[i - 1]);
-                  /*  } else if ((sites[i - 1].now != data) && (data.includes(sites[i - 1].search_term))) {
-                        var changes = jsdiff.diffWords(sites[i - 1].now, data);
-                        sendChangeNotification(changes, sites[i - 1]); THIS IS BAD. PLS FIX*/
-                    } else {
-                        debug.log('no change detected.');
-                    }
-
-                }
-
-
-            });
-
-
-        }
-
-
-    });
+    monitor = setInterval(function(){ checkForChanges(); }, (updateInterval*1000));
 
 });
 
-//task.start();
-
+function checkForChanges(){
+  debug.log('listening for changes and checking every: ' + updateInterval + ' seconds');
+}
 
 function sendChangeNotification(changes, site) {
 
@@ -118,4 +80,11 @@ function download(url, callback) {
     }).on("error", function() {
         callback(null);
     });
+}
+
+exports.setUpdateInterval = function(newInterval){
+  debug.log('OLD interval: ' + updateInterval + ' seconds. NEW interval: ' + newInterval + ' seconds.');
+  clearInterval(monitor);
+  updateInterval = newInterval;
+  monitor = setInterval(function(){ checkForChanges(); }, (updateInterval*1000));
 }
