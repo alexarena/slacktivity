@@ -75,8 +75,8 @@
 
                 <div class="card">
                   <div class="card-block">
-<b>Monitored Sites</b> <a data-toggle="collapse" href="#addBtnCollapse" aria-expanded="false" aria-controls="addBtnCollapse" class="card-link pull-lg-right">Add Site</a>
-</div>
+                      <b>Monitored Sites</b> <a data-toggle="collapse" id="addButton" onclick="addButton();" href="#addBtnCollapse" aria-expanded="false" aria-controls="addBtnCollapse" class="card-link pull-lg-right">Add Site</a>
+                  </div>
 
                     <div class="list-group">
 
@@ -92,7 +92,7 @@
 
                       <% var divID = 'collapse-' + monitored_sites[i].id; %>
 
-                    <a href="#<%=divID%>" class="list-group-item list-group-item-action list-group-item-within-card" data-toggle="collapse"  aria-expanded="false" aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
+                    <a href="#<%=divID%>" id="link-for-<%=divID%>" class="list-group-item list-group-item-action list-group-item-within-card" data-toggle="collapse"  onclick="applyActiveStyling('link-for-<%=divID%>');" aria-expanded="false" aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
                       <div class="collapse" id="<%=divID%>">
                         <div class="card card-block collapse-card-block list-group-item-within-card">
                           <div class="form-group"><label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="<%=monitored_sites[i].url%>"><small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small></div>

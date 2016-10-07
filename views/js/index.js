@@ -90,6 +90,13 @@ function load() {
 
 }
 
+function applyActiveStyling(divID){
+  console.log("checking if " + divID + " is active.")
+  divID = "#" + divID
+  $(divID).toggleClass('active');
+
+}
+
 function deleteButton(id){
   $.post( "delete/"+id, function( data ) {
     console.log(data);
@@ -112,8 +119,12 @@ function showOrHideAddSitePanel(){
 }
 
 function addButton(){
-  $("#add-site-card").toggle();
-  $("addButton").text("Hello world!");
+  if($("#addButton").text() == 'Add Site'){
+    $("#addButton").text("Cancel");
+  }
+  else{
+    $("#addButton").text("Add Site");
+  }
 }
 
 function toggleSitePanel(id){
