@@ -52,9 +52,12 @@ function checkSingleSiteForChanges(site) {
     debug.log('Checking site for changes!');
     download(site.url, function(downloadContents) {
       if((downloadContents != site.then) && (site.then != null)){
-        debug.log('Change Detected!');
-        var changes = jsdiff.diffWords(site.then, downloadContents);
-        sendChangeNotification(changes,site);
+        //When there's a search term, only show a notification if that term is found.
+        if((site.search_term == null) || (site.search_term != null && downloadContents.includes(site.search_term))){
+          debug.log('Change Detected!');
+          var changes = jsdiff.diffWords(site.then, downloadContents);
+          sendChangeNotification(changes,site);
+        }
       }
       else{
         debug.log('No change detected.')
@@ -72,7 +75,7 @@ function checkSingleSiteForChanges(site) {
 function sendChangeNotification(changes, site) {
 
     var message = "Heads up! Something has changed at: " + site.url;
-    if (site.search_term != null) {
+    if (site.search_term != null || site.search_term!= '') {
         message = "Heads up! Your search term (" + site.search_term + ") was found at: " + site.url;
     }
 
