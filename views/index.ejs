@@ -78,7 +78,7 @@
                       <b>Monitored Sites</b> <a data-toggle="collapse" id="addButton" onclick="addButton();" href="#addBtnCollapse" aria-expanded="false" aria-controls="addBtnCollapse" class="card-link pull-lg-right">Add Site</a>
                   </div>
 
-                    <div class="list-group">
+                    <div class="list-group" id="monitoredSitesList" role="tablist" aria-multiselectable="true">
 
                       <div class="collapse" id="addBtnCollapse">
                       <div  class="card card-block collapse-card-block list-group-item-within-card add-site-card">
@@ -88,18 +88,26 @@
                       </div>
                     </div>
 
+
+
                     <% for(var i=0; i<monitored_sites.length; i++){ %>
 
                       <% var divID = 'collapse-' + monitored_sites[i].id; %>
 
-                    <a href="#<%=divID%>" id="link-for-<%=divID%>" class="list-group-item list-group-item-action list-group-item-within-card" data-toggle="collapse"  onclick="applyActiveStyling('link-for-<%=divID%>');" aria-expanded="false" aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
-                      <div class="collapse" id="<%=divID%>">
+                    <a href="#<%=divID%>" id="link-for-<%=divID%>" class="list-group-item list-group-item-action list-group-item-within-card" data-parent="#monitored-sites-accordion" data-toggle="collapse"  onclick="applyActiveStyling('link-for-<%=divID%>');" aria-expanded="false" aria-controls="<%=divID%>"><%=monitored_sites[i].url%></a>
+                    <div class="collapse" id="<%=divID%>" role="tabpanel">
                         <div class="card card-block collapse-card-block list-group-item-within-card">
-                          <div class="form-group"><label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="<%=monitored_sites[i].url%>"><small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small></div>
-                          <div class="form-group"><label for="search-term">Search Term</label><input type="text" class="form-control" name="search_term" id="search-term" placeholder="" value="<%=monitored_sites[i].search_term%>"><small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small></div>
-                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <div class="form-group">
+                                <label for="website-url">Website URL</label><input type="url" class="form-control" name="website_url" id="website-url" value="<%=monitored_sites[i].url%>">
+                                <small id="website-url-help" class="form-text text-muted">This is the URL of the website you want to monitor.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="search-term">Search Term</label><input type="text" class="form-control" name="search_term" id="search-term" placeholder="" value="<%=monitored_sites[i].search_term%>">
+                                <small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
-                      </div>
+                    </div>
 
                       <%}%>
 

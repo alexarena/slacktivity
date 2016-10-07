@@ -91,9 +91,9 @@ function load() {
 }
 
 function applyActiveStyling(divID){
-  console.log("checking if " + divID + " is active.")
-  divID = "#" + divID
-  $(divID).toggleClass('active');
+
+  divID = "#" + divID;
+  $(divID).toggleClass('collapsableIsOpen');
 
 }
 
