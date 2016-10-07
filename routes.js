@@ -4,6 +4,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('views'));
 var slacktivity = require('./index.js')
 var bodyParser = require('body-parser');
+var Promise = require('promise');
 app.use(bodyParser.json() );
 app.use(bodyParser.urlencoded({
   extended: true
@@ -48,54 +49,46 @@ exports.query = function(query,callback){
 }
 
 app.get('/', function (req, res) {
-  res.render('index');
+
+  client.query('SELECT * FROM monitored_sites', function (err, result) {
+    if (err){
+      //res.json(err);
+    }
+
+    res.render('index',{"title": "Slacktivity Monitor","monitored_sites": result.rows});
+
+  });
 });
 
 app.get('/load',function(req,res){
 
-  client.query('SELECT * FROM "config"', function (err, result) {
-    if (err){
-      res.json(err);
-    }
-
-    res.json(result.rows[0]);
-
-  });
-
-});
-
-app.get('/loadmonitoredsites',function(req,res){
-
-  client.query('SELECT * FROM "monitored_sites"', function (err, result) {
-    if (err){
-      res.json(err);
-    }
-
-    res.json(result.rows);
-
-  });
-
-});
-
-app.post('/setupdateinterval',function(req,res){
-
-  debug.log("POST update interval " );
-  debug.log(req.body);
+  var query = 'SELECT * FROM "config"'
 
 
-  client.query('UPDATE "config" SET update_interval =  ' + req.body.update_interval, function (err, result) {
+  client.query(query, function (err, result) {
     if (err){
       res.json(err);
     }
     else{
-      slacktivity.refreshCronJob();
-      res.redirect('/?success=true');
+      res.json(result.rows[0]);
     }
 
   });
 
-
 });
+
+// app.get('/loadmonitoredsites',function(req,res){
+//
+//   client.query('SELECT * FROM "monitored_sites"', function (err, result) {
+//     if (err){
+//       res.json(err);
+//     }
+//
+//     res.json(result.rows);
+//
+//   });
+//
+// });
 
 app.post('/setupdateinterval',function(req,res){
 

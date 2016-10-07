@@ -12,3 +12,46 @@
   text-decoration: none;
   cursor: pointer;
 }
+.title-container{
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.list-group-item-within-card{
+  border-left: 0px;
+  border-right: 0px;
+  border-top-right-radius: 0px !important;
+  border-top-left-radius: 0px !important;
+}
+
+.collapse-card-block{
+  margin-bottom: 0px;
+  border-radius: 0px;
+}
+
+.card-btn-primary{
+  background-color: #184385;
+}
+
+.list-group-add-site{
+  margin-top: 20px;
+  background-color: #D6E5CC;
+  color: #316730;
+
+}
+
+.card-block-no-bottom-pad{
+  padding-bottom: 0px;
+}
+
+.no-bottom-margin{
+  margin-bottom: 0px;
+}
+
+.list-group-item-selected{
+  background-color: #F7F5F3;
+}
+
+.add-site-card{
+  background-color: #F7F6F5;
+}

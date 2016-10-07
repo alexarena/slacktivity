@@ -1,4 +1,9 @@
 function load() {
+
+  //console.log(monitored_sites);
+
+    $("#add-site-card").hide();
+
     $.get("/load", function(data) {
 
         if((location.pathname+location.search).substr(2).includes('success=true')){
@@ -104,6 +109,11 @@ function showOrHideAddSitePanel(){
   $("#add-button").toggleClass( "hidden" );
 
 
+}
+
+function addButton(){
+  $("#add-site-card").toggle();
+  $("addButton").text("Hello world!");
 }
 
 function toggleSitePanel(id){

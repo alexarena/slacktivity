@@ -27,6 +27,7 @@
     "node-cron": "^1.1.2",
     "node-libcurl": "^1.0.0",
     "pg": "^6.1.0",
+    "promise": "^7.1.1",
     "slack-node": "^0.1.8"
   }
 }
