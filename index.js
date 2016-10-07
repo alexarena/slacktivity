@@ -91,6 +91,7 @@ function sendChangeNotification(changes, site) {
 }
 
 // Utility function that downloads a URL and invokes callback with the data.
+// Source credit to John Robinson @ http://www.storminthecastle.com/2013/08/25/use-node-js-to-extract-data-from-the-web-for-fun-and-profit/
 function download(url, callback) {
     http.get(url, function(res) {
         var data = "";
@@ -107,7 +108,6 @@ function download(url, callback) {
 
 
 //setUpdateInterval and setSlackDetails are used by routes to update while the app is running.
-
 exports.setSlackDetails = function(newURL,newBotName){
   webhookURL = newURL;
   slack.setWebhook(webhookURL);
