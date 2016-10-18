@@ -31,7 +31,12 @@ var client = new pg.Client(dbconfig);
 
 // connect to our database
 client.connect(function (err) {
-  if (err){ throw err};
+  if (err){ 
+    
+    console.log("Error! Could not connect to database. Exiting...")
+    process.exit(1);
+    
+  };
 });
 
 exports.query = function(query,callback){
