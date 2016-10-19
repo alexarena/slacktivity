@@ -11,10 +11,12 @@ function load() {
 
         if((location.pathname+location.search).substr(2).includes('success=true')){
           $("#success-msg").show();
+          $('#success-msg').delay(5000).fadeOut(400);
         }
 
         if((location.pathname+location.search).substr(2).includes('success=false')){
           $("#failure-msg").show();
+          $('#failure-msg').delay(5000).fadeOut(400);
         }
 
         console.log(data);
