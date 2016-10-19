@@ -21,16 +21,21 @@ var monitor; //handles setInterval
 
 //At start, gets and sets the configuration details.
 server.query('SELECT * FROM "config"', function(result) {
-
-    updateInterval = result.rows[0].update_interval;
-    webhookURL = result.rows[0].webhook_url;
-
-    slack.setWebhook(webhookURL);
-
-    slackbotName = result.rows[0].slackbot_name;
-
-    monitor = setInterval(function(){ checkForChanges(); }, (updateInterval*1000));
-
+    
+    if(result.rows[0]){
+        updateInterval = result.rows[0].update_interval;
+        webhookURL = result.rows[0].webhook_url;
+    
+        slack.setWebhook(webhookURL);
+    
+        slackbotName = result.rows[0].slackbot_name;
+        
+        monitor = setInterval(function(){ checkForChanges(); }, (updateInterval*1000));
+    }
+    else{
+        console.log('Error. Database does not contain a default update interval. Exiting...');
+        process.exit(1);
+    }
 });
 
 function checkForChanges(){
