@@ -1,0 +1,166 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: config; Type: TABLE; Schema: public; Owner: username
+--
+
+CREATE TABLE config (
+    id integer NOT NULL,
+    update_interval integer,
+    webhook_url text,
+    slackbot_name text
+);
+
+--
+-- Name: config_id_seq; Type: SEQUENCE; Schema: public; Owner: username
+--
+
+CREATE SEQUENCE config_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+--
+-- Name: config_id_seq; Type: SEQUENCE OWNED BY; Schema: public
+--
+
+ALTER SEQUENCE config_id_seq OWNED BY config.id;
+
+
+--
+-- Name: monitored_sites; Type: TABLE; Schema: public; Owner: username
+--
+
+CREATE TABLE monitored_sites (
+    id integer NOT NULL,
+    url text,
+    search_term text,
+    slack_channel text,
+    "then" text
+);
+
+--
+-- Name: monitored_sites_id_seq; Type: SEQUENCE; Schema: public
+--
+
+CREATE SEQUENCE monitored_sites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+--
+-- Name: monitored_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public
+--
+
+ALTER SEQUENCE monitored_sites_id_seq OWNED BY monitored_sites.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: username
+--
+
+ALTER TABLE ONLY config ALTER COLUMN id SET DEFAULT nextval('config_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: username
+--
+
+ALTER TABLE ONLY monitored_sites ALTER COLUMN id SET DEFAULT nextval('monitored_sites_id_seq'::regclass);
+
+
+--
+-- Data for Name: config; Type: TABLE DATA; Schema: public; Owner: username
+--
+
+COPY config (id, update_interval, webhook_url, slackbot_name) FROM stdin;
+1	300	\N	\N
+\.
+
+
+--
+-- Name: config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: username
+--
+
+SELECT pg_catalog.setval('config_id_seq', 1, true);
+
+
+--
+-- Data for Name: monitored_sites; Type: TABLE DATA; Schema: public; Owner: username
+--
+
+COPY monitored_sites (id, url, search_term, slack_channel, "then") FROM stdin;
+\.
+
+
+--
+-- Name: monitored_sites_id_seq; Type: SEQUENCE SET; Schema: public; Owner: username
+--
+
+SELECT pg_catalog.setval('monitored_sites_id_seq', 1, false);
+
+
+--
+-- Name: config_pkey; Type: CONSTRAINT; Schema: public; Owner: username
+--
+
+ALTER TABLE ONLY config
+    ADD CONSTRAINT config_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: monitored_sites_pkey; Type: CONSTRAINT; Schema: public; Owner: username
+--
+
+ALTER TABLE ONLY monitored_sites
+    ADD CONSTRAINT monitored_sites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: username
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--

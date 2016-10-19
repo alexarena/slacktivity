@@ -17,12 +17,9 @@
     </head>
     <body onload="load();">
 
-        <%console.log("Monitored Sites: ") %>
-        <%console.log(monitored_sites)%>
-
         <div class="container">
 
-            <div class="col-md-9">
+            <div class="col-lg-9">
                 <div class="title-container">
                     <a class="title-link" href="/"><h4 class="display-4"></img><%=title %></h4></a>
                 <h5>
@@ -45,6 +42,11 @@
                 <strong>Error!</strong>
                 There was a problem saving your changes.
             </div>
+            
+            <div class="alert alert-danger" role="alert" id="no-webhook-msg">
+                You need to specify a Webhook URL for notifications to be sent. You can <a target="blank"class="alert-link" href="https://my.slack.com/services/new/incoming-webhook/">create one here</a>.
+            </div>
+
 
             <div class="card">
                 <div class="card-block card-block-no-bottom-pad">
@@ -56,7 +58,7 @@
                         <div class="form-group">
                             <label class="sr-only" for="exampleInputAmount">Update Interval</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="update_interval" name="update_interval" placeholder="Update Interval">
+                                <input type="text" autocomplete="off" class="form-control" id="update_interval" name="update_interval" placeholder="Update Interval">
                                 <div class="input-group-addon">Seconds</div>
                             </div>
                         </div>
@@ -144,7 +146,7 @@
                                         <small id="search-term-help" class="form-text text-muted">You won't be notified unless there's a match for this term. If you want to be notifed when any change is made to the page, leave this field blank.</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="custom-slack-channel">Slack Channel URL</label><input type="text" class="form-control" name="slack_channel" id="custom-slack-channel" value="<%=monitored_sites[i].slack_channel%>">
+                                        <label for="custom-slack-channel">Slack Channel</label><input type="text" class="form-control" name="slack_channel" id="custom-slack-channel" value="<%=monitored_sites[i].slack_channel%>" placeholder="#">
                                         <small id="custom-slack-channel-help" class="form-text text-muted">If you don't specify one here, notifications will be sent to your webhook's default channel.</small>
                                     </div>
                                     <input type="hidden" name="id" value="<%=monitored_sites[i].id%>">

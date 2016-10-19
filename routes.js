@@ -11,30 +11,37 @@ app.use(bodyParser.urlencoded({
 }));
 var pg = require('pg');
 
+require('dotenv').config(); // used to load env variables for the database.
+
 var debug = require('./debug.js');
 debug.on();
 
 var port = 3000;
 
 var dbconfig = {
-  user: 'postgres', //env var: PGUSER
-  database: 'slacktivity', //env var: PGDATABASE
+  user: process.env.PGUSER, //env var: PGUSER
+  database: process.env.PGDATABASE, //env var: PGDATABASE
   password: process.env.PGPASSWORD, //env var: PGPASSWORD
-  host: 'localhost', // Server hosting the postgres database
-  port: 5432, //env var: PGPORT
+  host: process.env.PGHOST, // Server hosting the postgres database
+  port: process.env.PGPORT, //env var: PGPORT
   max: 10, // max number of clients in the pool
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
 };
-
-var test;
 
 // instantiate a new clients
 var client = new pg.Client(dbconfig);
 
 // connect to our database
 client.connect(function (err) {
-  if (err){ throw err};
+  if (err){ 
+    
+    console.log("Error! Could not connect to database. Exiting...")
+    process.exit(1);
+    
+  };
 });
+
+exports.pg = client;
 
 exports.query = function(query,callback){
 
@@ -52,8 +59,6 @@ exports.query = function(query,callback){
 
 app.get('/', function (req, res) {
 
-  test = setInterval(function(){ console.log("Hello"); }, 1000);
-
   client.query('SELECT * FROM monitored_sites', function (err, result) {
     if (err){
       //res.json(err);
@@ -62,13 +67,6 @@ app.get('/', function (req, res) {
     res.render('index',{"title": "Slacktivity Monitor","monitored_sites": result.rows});
 
   });
-});
-
-app.get('/interval3000', function (req, res) {
-
-  clearInterval(test);
-  test = setInterval(function(){ console.log("Hello interval is 300"); }, 3000);
-
 });
 
 app.get('/load',function(req,res){
@@ -88,19 +86,6 @@ app.get('/load',function(req,res){
 
 });
 
-// app.get('/loadmonitoredsites',function(req,res){
-//
-//   client.query('SELECT * FROM "monitored_sites"', function (err, result) {
-//     if (err){
-//       res.json(err);
-//     }
-//
-//     res.json(result.rows);
-//
-//   });
-//
-// });
-
 app.post('/setupdateinterval',function(req,res){
 
   debug.log("POST update interval " );
@@ -111,10 +96,14 @@ app.post('/setupdateinterval',function(req,res){
     if (err){
       res.redirect('/?success=false');
     }
+    else{
+
+      slacktivity.setUpdateInterval(req.body.update_interval);
+      res.redirect('/?success=true');
+
+    }
 
   });
-
-  res.redirect('/?success=true');
 
 
 });
@@ -220,6 +209,7 @@ debug.log(query);
       res.redirect('/?success=false');
     }
     else{
+      slacktivity.setSlackDetails(req.body.webhook_url,req.body.slackbot_name);
       res.redirect('/?success=true');
     }
 
