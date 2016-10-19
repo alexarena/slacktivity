@@ -2,6 +2,7 @@ var http = require('http');
 var Slack = require('slack-node');
 var fs = require('fs');
 var jsdiff = require('diff');
+var escape = require('sql-escape');
 
 var updateInterval; // seconds
 var webhookURL = '';
@@ -13,7 +14,8 @@ server.start();
 
 slack = new Slack();
 
-//A little debugging module I've built. I might add onto later, but for now it
+
+//A little debugging module I've built. I might add onto later, but for now its dead simple.
 var debug = require('./debug.js');
 debug.on();
 
@@ -54,25 +56,29 @@ function checkForChanges(){
 }
 
 function checkSingleSiteForChanges(site) {
+    
+    //server.query('SELECT $1::text as name', ['brianc'],function(result){console.log("RESULT: "+ result)});
 
     debug.log('Checking site for changes!');
     download(site.url, function(downloadContents) {
-      if((downloadContents != site.then) && (site.then != null)){
-        //When there's a search term, only show a notification if that term is found.
-        if((site.search_term == null) || (site.search_term != null && downloadContents.includes(site.search_term))){
-          debug.log('Change Detected!');
-          var changes = jsdiff.diffWords(site.then, downloadContents);
-          sendChangeNotification(changes,site);
+        
+        if(downloadContents){
+          if((downloadContents != site.then) && (site.then != null)){
+            //When there's a search term, only show a notification if that term is found.
+            if((site.search_term == null) || (site.search_term != null && downloadContents.includes(site.search_term))){
+              debug.log('Change Detected!');
+              var changes = jsdiff.diffWords(site.then, downloadContents);
+              sendChangeNotification(changes,site);
+            }
+          }
+          else{
+            debug.log('No change detected.')
+          }
+    
+          //Set the last checked value in the DB to what we just got.
+          var query = 'UPDATE "monitored_sites" SET "then" =$1 WHERE id=$2';
+          server.pg.query(query,[downloadContents,site.id],function(result){});
         }
-      }
-      else{
-        debug.log('No change detected.')
-      }
-
-      //Set the last checked value in the DB to what we just got.
-      var query = 'UPDATE "monitored_sites" SET "then" = \''+downloadContents+'\' WHERE id=' + site.id;
-      debug.log(query);
-      server.query(query,function(result){});
     });
 
 

@@ -41,6 +41,8 @@ client.connect(function (err) {
   };
 });
 
+exports.pg = client;
+
 exports.query = function(query,callback){
 
   client.query(query, function (err, result) {
