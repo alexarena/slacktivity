@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+//
+// This executable sets up the environment and runs the Slacktivity Monitor
+// Thank you x100000 to Nick Farina (https://github.com/nfarina/homebridge) whose code I modeled this after. 
+//
+
+'use strict';
+
+process.title = 'slacktivity-monitor';
+
+// Find the Slacktivity Monitor lib
+var path = require('path');
+var fs = require('fs');
+var lib = path.join(path.dirname(fs.realpathSync(__filename)), '../');
+
+// Run Slacktivity Monitor
+require(lib + 'index.js')();

@@ -15,18 +15,16 @@
   "bugs": {
     "url": "https://github.com/alexarena/slacktivity/issues"
   },
+  "bin": {
+    "slacktivity-monitor": "bin/slacktivity-monitor"
+  },
   "homepage": "https://github.com/alexarena/slacktivity#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
-    "cron": "^1.1.0",
     "diff": "^3.0.0",
     "dotenv": "^2.0.0",
     "ejs": "^2.5.2",
-    "env": "0.0.2",
     "express": "^4.14.0",
-    "mongodb": "^2.2.10",
-    "node-cron": "^1.1.2",
-    "node-libcurl": "^1.0.0",
     "pg": "^6.1.0",
     "promise": "^7.1.1",
     "slack-node": "^0.1.8"
