@@ -6,17 +6,15 @@ var jsdiff = require('diff');
 var updateInterval; // seconds
 var webhookURL = '';
 var slackbotName = 'slacktivity-bot';
-var slackbotIcon = ':radio:';
 
 var server = require('./routes.js');
 server.start();
 
 slack = new Slack();
 
-
 //A little debugging module I've built. I might add onto later, but for now its dead simple.
 var debug = require('./debug.js');
-debug.on();
+debug.off();
 
 var monitor; //handles setInterval
 
@@ -83,42 +81,82 @@ function checkSingleSiteForChanges(site) {
 
 }
 
+function getPosition(str, m, i) {
+   return str.split(m, i).join(m).length;
+}
+
 function sendChangeNotification(changes, site) {
+  
+    var removedList = '';
+    var addedList = '';
+    
+    var maxChangesToShow = 5;
+    
+    changes.forEach(function(part){   
+        if(part.added){
+            addedList += part.value + '\n'
+        }
+        if(part.removed){
+           removedList += part.value + '\n'
+        }
+    });
+    
+    //Truncate the list of additions and removals so its pretty in Slack.
+    removedList = removedList.substring(0,getPosition(removedList, '\n', maxChangesToShow));
+    addedList = addedList.substring(0,getPosition(addedList, '\n', maxChangesToShow));
 
-    debug.log(changes)
-
-    var message = "Heads up! Something has changed at: " + site.url;
-    if (site.search_term != null || site.search_term!= '') {
-        message = "Heads up! Your search term (" + site.search_term + ") was found at: " + site.url;
+    var message = "Heads up! Something has changed at: <" + site.url +">\n";
+    if (site.search_term != null && site.search_term!= '') {
+        message = "Heads up! Your search term `" + site.search_term + "` was found at: <" + site.url +">\n";
     }
-
-    slack.webhook({
-        channel: site.slack_channel, //This must be prefixed with '#'
-        username: slackbotName,
-        icon_emoji: slackbotIcon,
-        text: message,
-        attachments: [
-        {
-            "fallback": "ReferenceError - UI is not defined: https://honeybadger.io/path/to/event/",
-            "text": "Search Term: `internship`, was found at <http://localhost:3000>\nHere's a rundown of the changes:",
+    
+    var additionsObj; 
+    
+    if(addedList != null && addedList != ''){
+        
+        additionsObj = {
+            "fallback": "",
             "fields": [
                 {
                     "title": "Added",
-                    "value": "Awesome Project",
-                    "short": false
-                },
-                {
-                    "title": "Removed",
-                    "value": "production",
+                    "value": addedList,
                     "short": false
                 }
             ],"mrkdwn_in": [
                 "text",
                 "pretext"
             ],
-            "color": "#183D7F"
+            "color": "#3CB07C"
         }
-    ]
+        
+    }
+    
+    var removalsObj; 
+    
+    if(removedList != null && removedList != ''){
+        
+        removalsObj = {
+            "fallback": "",
+            "fields": [
+                {
+                    "title": "Removed",
+                    "value": removedList,
+                    "short": false
+                }
+            ],"mrkdwn_in": [
+                "text",
+                "pretext"
+            ],
+            "color": "#FD8789"
+        }
+        
+    }
+
+    slack.webhook({
+        channel: site.slack_channel,
+        username: slackbotName,
+        text: message,
+        attachments: [additionsObj,removalsObj]
     }, function(err, response) {
         debug.log(response);
     });

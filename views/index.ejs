@@ -17,9 +17,6 @@
     </head>
     <body onload="load();">
 
-        <%console.log("Monitored Sites: ") %>
-        <%console.log(monitored_sites)%>
-
         <div class="container">
 
             <div class="col-lg-9">
@@ -45,6 +42,11 @@
                 <strong>Error!</strong>
                 There was a problem saving your changes.
             </div>
+            
+            <div class="alert alert-danger" role="alert" id="no-webhook-msg">
+                You need to specify a Webhook URL for notifications to be sent. You can <a target="blank"class="alert-link" href="https://my.slack.com/services/new/incoming-webhook/">create one here</a>.
+            </div>
+
 
             <div class="card">
                 <div class="card-block card-block-no-bottom-pad">
