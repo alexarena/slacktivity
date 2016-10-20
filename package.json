@@ -1,6 +1,6 @@
 {
   "name": "slacktivity-monitor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Monitor changes to sites through Slack",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "bin": {
     "slacktivity-monitor": "bin/slacktivity-monitor"
   },
+  "preferGlobal": true,
   "homepage": "https://github.com/alexarena/slacktivity#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
