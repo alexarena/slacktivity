@@ -226,9 +226,7 @@ debug.log(query);
 });
 
 exports.start = function(){
-
   app.listen(port, function () {
-    console.log('Welcome to Slacktivity Monitor! I\'m now running on port: ' + port);
+    console.log('Welcome to Slacktivity Monitor!\nI\'m now running on port: ' + port);
   });
-
 }
