@@ -24,8 +24,6 @@ app.set('views', path.join(__dirname, '/views'));
 var debug = require('./debug.js');
 debug.on();
 
-var port = 3000;
-
 var dbconfig = {
   user: process.env.PGUSER, //env var: PGUSER
   database: process.env.PGDATABASE, //env var: PGDATABASE
@@ -225,7 +223,15 @@ debug.log(query);
 
 });
 
-exports.start = function(){
+exports.start = function(portIn){
+  portIn = parseInt(portIn);
+  var port = 3000;
+  console.log(typeof portIn);
+  if(!isNaN(portIn)){
+    port = portIn;
+  }
+  
+  console.log("Port: " + port)
   app.listen(port, function () {
     console.log('Welcome to Slacktivity Monitor!\nI\'m now running on port: ' + port);
   });

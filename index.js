@@ -12,7 +12,7 @@ var server = require('./routes.js');
 
 module.exports = function(){
     
-    server.start();
+    server.start(process.argv[2]);
     
     slack = new Slack();
     
