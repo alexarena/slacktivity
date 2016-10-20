@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
-app.set('view engine', 'ejs');
-app.use(express.static('views'));
+
 var slacktivity = require('./index.js')
 var bodyParser = require('body-parser');
 var Promise = require('promise');
@@ -10,8 +9,17 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 var pg = require('pg');
+var path = require('path');
 
-require('dotenv').config(); // used to load env variables for the database.
+var fs = require('fs');
+var thisLib = path.join(path.dirname(fs.realpathSync(__filename)), '/');
+var completePath = thisLib + 'bin/.env'
+require('dotenv').config({path: completePath}); // used to load env variables for the database.
+
+app.set('view engine', 'ejs');
+
+app.use(express.static(path.join(__dirname, 'views')));
+app.set('views', path.join(__dirname, '/views'));
 
 var debug = require('./debug.js');
 debug.on();

@@ -6,6 +6,7 @@ var jsdiff = require('diff');
 var updateInterval; // seconds
 var webhookURL = '';
 var slackbotName = 'slacktivity-bot';
+var path = require('path');
 
 var server = require('./routes.js');
 
