@@ -3,7 +3,7 @@ Monitor changes to sites through Slack
 # Database Configuration
 Slacktivity Monitor uses [PostgreSQL](https://www.postgresql.org/) for it's database. It's easy to get started with, especially for Mac users who can install it through [Homebrew](http://brew.sh/) using: 
 
-`brew install postgres`.
+`brew install postgres`
 
 Once you have Postgres installed, navigate to the folder containing the `slacktivity_db` file and run the following command:
 
