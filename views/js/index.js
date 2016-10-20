@@ -1,7 +1,5 @@
 function load() {
 
-  //console.log(monitored_sites);
-
     $("#add-site-card").hide();
     $("#failure-msg").hide();
     $("#success-msg").hide();

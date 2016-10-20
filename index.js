@@ -2,18 +2,16 @@ var http = require('http');
 var Slack = require('slack-node');
 var fs = require('fs');
 var jsdiff = require('diff');
+var path = require('path');
+var server = require('./routes.js');
 
 var updateInterval; // seconds
 var webhookURL = '';
 var slackbotName = 'slacktivity-bot';
-var path = require('path');
-
-var server = require('./routes.js');
 
 module.exports = function(){
     
     server.start(process.argv[2]);
-    
     slack = new Slack();
     
     //A little debugging module I've built. I might add onto later, but for now its dead simple.
@@ -28,9 +26,7 @@ module.exports = function(){
         if(result.rows[0]){
             updateInterval = result.rows[0].update_interval;
             webhookURL = result.rows[0].webhook_url;
-        
             slack.setWebhook(webhookURL);
-        
             slackbotName = result.rows[0].slackbot_name;
             
             monitor = setInterval(function(){ checkForChanges(); }, (updateInterval*1000));
@@ -43,28 +39,21 @@ module.exports = function(){
     
     function checkForChanges(){
       debug.log('listening for changes and checking every: ' + updateInterval + ' seconds');
-    
       server.query('SELECT * FROM "monitored_sites"', function(result) {
-    
         var sites = result.rows;
-    
         for(var i=0; i<sites.length; i++){ //check each site for changes
           checkSingleSiteForChanges(sites[i]);
         }
-    
       });
-    
     }
     
     function checkSingleSiteForChanges(site) {
-        
-        //server.query('SELECT $1::text as name', ['brianc'],function(result){console.log("RESULT: "+ result)});
-    
         debug.log('Checking site for changes!');
         download(site.url, function(downloadContents) {
-            
+           
             if(downloadContents){
               if((downloadContents != site.then) && (site.then != null)){
+                  
                 //When there's a search term, only show a notification if that term is found.
                 if((site.search_term == null) || (site.search_term != null && downloadContents.includes(site.search_term))){
                   debug.log('Change Detected!');
@@ -89,11 +78,9 @@ module.exports = function(){
        return str.split(m, i).join(m).length;
     }
     
-    function sendChangeNotification(changes, site) {
-      
+    function sendChangeNotification(changes, site) {  
         var removedList = '';
-        var addedList = '';
-        
+        var addedList = '';  
         var maxChangesToShow = 5;
         
         changes.forEach(function(part){   
@@ -114,8 +101,7 @@ module.exports = function(){
             message = "Heads up! Your search term `" + site.search_term + "` was found at: <" + site.url +">\n";
         }
         
-        var additionsObj; 
-        
+        var additionsObj;    
         if(addedList != null && addedList != ''){
             
             additionsObj = {
@@ -135,8 +121,7 @@ module.exports = function(){
             
         }
         
-        var removalsObj; 
-        
+        var removalsObj;   
         if(removedList != null && removedList != ''){
             
             removalsObj = {
@@ -152,8 +137,7 @@ module.exports = function(){
                     "pretext"
                 ],
                 "color": "#FD8789"
-            }
-            
+            } 
         }
     
         slack.webhook({
