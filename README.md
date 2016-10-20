@@ -42,4 +42,11 @@ You'll obviously need to change those values as necessary. It's also worth notin
 
 The `.env` file should be placed in the `node-modules/slacktivity-monitor/bin` directory, alongside the `slacktivity-monitor` executable.
 
+# Starting the App
+
+You can start Slacktivity Monitor with the command: `slacktivity-monitor`
+
+The command accepts one argument, a port number. If you specify a port number, it will run on that port. Otherwise, it will default to 3000.
+
+
 
