@@ -46,7 +46,9 @@ The `.env` file should be placed in the `node-modules/slacktivity-monitor/bin` d
 
 You can start Slacktivity Monitor with the command: `slacktivity-monitor`
 
-The command accepts one argument, a port number. If you specify a port number, it will run on that port. Otherwise, it will default to 3000.
+The command accepts one argument, a port number. If you specify a port number, it will run on that port. Otherwise, it will default to 3000. 
 
+Once the app is running, you should be able to access the web UI by visiting http://localhost:port, for example, [http://localhost:3000](http://localhost:3000).
 
-
+# Thanks
+I'd like to give a special shout-out to my awesome employer, [The CompoZed Lab at Allstate](https://github.com/compozed). Slacktivity Monitor was originally a project for one of our Open Source days, and it wouldn't be a reality otherwise. ❤️
