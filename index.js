@@ -23,6 +23,11 @@ module.exports = function(){
     //At start, gets and sets the configuration details.
     server.query('SELECT * FROM "config"', function(result) {
         
+        if(!result.rows){
+            console.log("Error! A database connection coudn't be established.\nMake sure you've properly configured your database in your .env file.");
+            process.exit(1);
+        }
+        
         if(result.rows[0]){
             updateInterval = result.rows[0].update_interval;
             webhookURL = result.rows[0].webhook_url;

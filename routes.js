@@ -18,7 +18,7 @@ var completePath = thisLib + 'bin/.env'
 require('dotenv').config({path: completePath}); // used to load env variables for the database.
 
 var debug = require('./debug.js');
-debug.on();
+debug.off();
 
 var dbconfig = {
   user: process.env.PGUSER,
@@ -189,12 +189,9 @@ app.post('/setslackdetails',function(req,res){
 exports.start = function(portIn){
   portIn = parseInt(portIn);
   var port = 3000;
-  console.log(typeof portIn);
   if(!isNaN(portIn)){
     port = portIn;
   }
-  
-  console.log("Port: " + port)
   app.listen(port, function () {
     console.log('Welcome to Slacktivity Monitor!\nI\'m now running on port: ' + port);
   });
